@@ -1,9 +1,6 @@
-// api/amor.js - Serverless function avanzada con Gemini 2.5 Pro para dedicatorias únicas
 import { GoogleGenAI } from '@google/genai';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-// Temas rotativos para garantizar que cada dedicatoria explore un ángulo diferente y nunca sea repetitiva
+// Temas rotativos para garantizar variedad
 const ENFOQUES_ROMANTICOS = [
   "el brillo inconfundible de sus ojos y la paz inmensa que transmite su mirada",
   "el recuerdo dulce de cómo empezó todo cuando se conocieron en el colegio y todo lo hermoso que construyeron",
@@ -18,13 +15,28 @@ const ENFOQUES_ROMANTICOS = [
 ];
 
 export default async function handler(req, res) {
+  // Manejo de métodos permitidos
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { tipo } = req.body || {};
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    console.error('Error: Variable GEMINI_API_KEY no encontrada');
+    return res.status(500).json({ error: 'Falta configurar la API Key en Vercel' });
+  }
 
-  // Escoger un enfoque al azar para que cada generación sea completamente fresca
+  // Parse seguro del cuerpo recibido
+  let bodyData = req.body;
+  if (typeof bodyData === 'string') {
+    try {
+      bodyData = JSON.parse(bodyData);
+    } catch {
+      bodyData = {};
+    }
+  }
+  const tipo = bodyData?.tipo;
+
   const enfoque = ENFOQUES_ROMANTICOS[Math.floor(Math.random() * ENFOQUES_ROMANTICOS.length)];
 
   let prompt = `Escribe una dedicatoria romántica muy conmovedora, poética y original (de 2 a 3 oraciones intensas) de Tyron para su novia Ayli (Aylen Cardozo).
@@ -39,8 +51,9 @@ Reglas estrictas:
   }
 
   try {
-    // 1. Intentamos con Gemini 2.5 Pro (el modelo más avanzado, elocuente y profundo)
+    const ai = new GoogleGenAI({ apiKey });
     let response;
+
     try {
       response = await ai.models.generateContent({
         model: 'gemini-2.5-pro',
@@ -52,7 +65,6 @@ Reglas estrictas:
         }
       });
     } catch (proError) {
-      // 2. Si hay límites de cuota temporal en 2.5-pro, fallback automático al modelo veloz 2.5-flash
       console.warn('Fallback a gemini-2.5-flash:', proError.message);
       response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
@@ -69,6 +81,6 @@ Reglas estrictas:
 
   } catch (error) {
     console.error('Error con Gemini API:', error);
-    return res.status(500).json({ error: 'No se pudo generar el mensaje' });
+    return res.status(500).json({ error: error.message || 'No se pudo generar el mensaje' });
   }
 }
