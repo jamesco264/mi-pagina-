@@ -1,0 +1,10 @@
+{
+  "name": "contador-de-amor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Contador de amor y dedicatorias con Gemini AI",
+  "dependencies": {
+    "@google/genai": "^0.1.1"
+  }
+}

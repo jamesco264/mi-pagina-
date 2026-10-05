@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra Galería de Recuerdos | Momentos de Amor 💜💙</title>
+  <meta name="description"
+    content="Nuestra historia de amor en fotos: momentos únicos, risas, citas y recuerdos inolvidables juntos.">
+
+  <!-- Tipografías de Google Fonts: Playfair Display + Outfit + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap"
+    rel="stylesheet">
+
+  <!-- Estilos de la Galería -->
+  <link rel="stylesheet" href="galeria.css">
+</head>
+
+<body>
+
+  <!-- Luces, destellos y corazones flotantes violetas y azules en el fondo -->
+  <div class="background-decorations" aria-hidden="true">
+    <div class="glow-orb orb-violet"></div>
+    <div class="glow-orb orb-blue"></div>
+    <div class="glow-orb orb-rose"></div>
+    <canvas id="gallery-hearts-canvas" class="hearts-canvas"></canvas>
+    <div class="gallery-vignette"></div>
+  </div>
+
+  <div class="app-container">
+
+    <!-- Barra superior de navegación -->
+    <nav class="top-nav" aria-label="Navegación principal">
+      <a href="index.html" class="nav-btn nav-back" title="Volver al contador de tiempo transcurrido">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Volver al Contador ⏳ 💖</span>
+      </a>
+
+      <div class="nav-badge">
+        <span class="pulse-sparkle">✨</span>
+        <span>8 Recuerdos Inolvidables</span>
+      </div>
+    </nav>
+
+    <!-- Encabezado de la Galería -->
+    <header class="gallery-header">
+      <div class="header-pill">
+        <span class="header-hearts">💜💙</span>
+        <span>Nuestra Historia de Amor</span>
+      </div>
+
+      <h1 class="gallery-title">
+        Nuestros Momentos Juntos
+      </h1>
+
+      <p class="gallery-subtitle">
+        Cada fotografía es un pedacito de nuestra historia y un recuerdo eterno de todo lo que compartimos.
+      </p>
+
+      <div class="romantic-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" class="banner-heart">
+          <path
+            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+          </path>
+        </svg>
+        <span>"Los momentos más hermosos son aquellos que vivimos juntos"</span>
+      </div>
+    </header>
+
+    <!-- Grilla de Fotos Romántica -->
+    <main class="gallery-grid" id="gallery-grid" aria-label="Galería de fotos de nuestra historia">
+
+      <!-- Foto 1: Espejo de complicidad -->
+      <article class="photo-card" data-index="0" data-title="Reflejo de Nosotros"
+        data-caption="Un momento espontáneo frente al espejo, miradas cómplices y la certeza de que a tu lado todo es más divertido y lindo.">
+        <div class="photo-media-wrapper">
+          <img src="img/foto1.jpg" alt="Momento espontáneo frente al espejo juntos" class="photo-img" loading="lazy">
+          <div class="photo-overlay">
+            <button class="zoom-btn" title="Ver foto en tamaño completo" aria-label="Ampliar foto">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+          <span class="photo-tag tag-violet">#Complicidad 💜</span>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-title-row">
+            <h2 class="photo-name">Reflejo de Nosotros</h2>
+            <button class="like-btn" title="Dar amor a esta foto" aria-label="Reaccionar con corazón">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="like-icon">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+              <span class="like-counter">1</span>
+            </button>
+          </div>
+          <p class="photo-desc">
+            Un momento espontáneo frente al espejo, miradas cómplices y la certeza de que a tu lado todo es especial.
+          </p>
+        </div>
+      </article>
+
+      <!-- Foto 2: Blanco y negro íntimo -->
+      <article class="photo-card" data-index="1" data-title="Miradas que Enamoran"
+        data-caption="En blanco y negro o en mil colores, no hay lugar más lindo en el mundo que estar así de cerca tuyo.">
+        <div class="photo-media-wrapper">
+          <img src="img/foto2.jpg" alt="Retrato íntimo y dulce en blanco y negro juntos" class="photo-img"
+            loading="lazy">
+          <div class="photo-overlay">
+            <button class="zoom-btn" title="Ver foto en tamaño completo" aria-label="Ampliar foto">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+          <span class="photo-tag tag-blue">#AmorPuro 💙</span>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-title-row">
+            <h2 class="photo-name">Miradas que Enamoran</h2>
+            <button class="like-btn" title="Dar amor a esta foto" aria-label="Reaccionar con corazón">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="like-icon">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+              <span class="like-counter">1</span>
+            </button>
+          </div>
+          <p class="photo-desc">
+            En blanco y negro o en mil colores, no hay lugar más lindo que estar así de cerquita.
+          </p>
+        </div>
+      </article>
+
+      <!-- Foto 3: Cita de malteadas -->
+      <article class="photo-card" data-index="2" data-title="Tardes Dulces"
+        data-caption="Nuestras salidas por algo rico: compartiendo risas, antojos y esos pequeños momentos que dejan el mejor sabor en el corazón.">
+        <div class="photo-media-wrapper">
+          <img src="img/foto3.jpg" alt="Cita de ricas malteadas y postres juntos" class="photo-img" loading="lazy">
+          <div class="photo-overlay">
+            <button class="zoom-btn" title="Ver foto en tamaño completo" aria-label="Ampliar foto">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+          <span class="photo-tag tag-violet">#NuestrasCitas 🥤🍫</span>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-title-row">
+            <h2 class="photo-name">Tardes Dulces</h2>
+            <button class="like-btn" title="Dar amor a esta foto" aria-label="Reaccionar con corazón">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="like-icon">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+              <span class="like-counter">1</span>
+            </button>
+          </div>
+          <p class="photo-desc">
+            Compartiendo risas, antojos y esos momentos que dejan el mejor sabor en el corazón.
+          </p>
+        </div>
+      </article>
+
+      <!-- Foto 4: Selfie tierna juntos -->
+      <article class="photo-card" data-index="3" data-title="Nuestra Chispa"
+        data-caption="Tu compañía y tu forma de ser hacen que cualquier día común se transforme en un día hermoso y feliz.">
+        <div class="photo-media-wrapper">
+          <img src="img/foto4.jpg" alt="Selfie tierna juntos disfrutando de su compañía" class="photo-img"
+            loading="lazy">
+          <div class="photo-overlay">
+            <button class="zoom-btn" title="Ver foto en tamaño completo" aria-label="Ampliar foto">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+          <span class="photo-tag tag-blue">#SiempreJuntos 💙</span>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-title-row">
+            <h2 class="photo-name">Nuestra Chispa</h2>
+            <button class="like-btn" title="Dar amor a esta foto" aria-label="Reaccionar con corazón">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="like-icon">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+              <span class="like-counter">1</span>
+            </button>
+          </div>
+          <p class="photo-desc">
+            Tu compañía llena cualquier día de luz. Gracias por cada sonrisa compartida.
+          </p>
+        </div>
+      </article>
+
+      <!-- Foto 5: Abrazados y descansando -->
+      <article class="photo-card" data-index="4" data-title="Paz a tu Lado"
+        data-caption="El refugio más cálido, suave y seguro de todos: descansar en tus brazos y sentir que el mundo entero se detiene.">
+        <div class="photo-media-wrapper">
+          <img src="img/foto5.jpg" alt="Descansando abrazados juntos en paz" class="photo-img" loading="lazy">
+          <div class="photo-overlay">
+            <button class="zoom-btn" title="Ver foto en tamaño completo" aria-label="Ampliar foto">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+          <span class="photo-tag tag-rose">#MiLugarSeguro 🌙💜</span>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-title-row">
+            <h2 class="photo-name">Paz a tu Lado</h2>
+            <button class="like-btn" title="Dar amor a esta foto" aria-label="Reaccionar con corazón">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="like-icon">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+              <span class="like-counter">1</span>
+            </button>
+          </div>
+          <p class="photo-desc">
+            El refugio más cálido y el abrazo donde todo está bien. Mi lugar favorito siempre serás vos.
+          </p>
+        </div>
+      </article>
+
+      <!-- Foto 6: Beso dulce en el auto -->
+      <article class="photo-card" data-index="5" data-title="Un Beso Nuestro"
+        data-caption="Ese beso tierno donde el tiempo se detiene, nuestras miradas se encuentran y nada más importa en el mundo.">
+        <div class="photo-media-wrapper">
+          <img src="img/foto6.jpg" alt="Un beso dulce y tierno juntos" class="photo-img" loading="lazy">
+          <div class="photo-overlay">
+            <button class="zoom-btn" title="Ver foto en tamaño completo" aria-label="Ampliar foto">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+          <span class="photo-tag tag-violet">#BesoEterno 💍💜</span>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-title-row">
+            <h2 class="photo-name">Un Beso Nuestro</h2>
+            <button class="like-btn" title="Dar amor a esta foto" aria-label="Reaccionar con corazón">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="like-icon">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+              <span class="like-counter">1</span>
+            </button>
+          </div>
+          <p class="photo-desc">
+            Ese beso tierno donde el tiempo se detiene y nada más importa en el mundo.
+          </p>
+        </div>
+      </article>
+
+      <!-- Foto 7: Postre y frutillas -->
+      <article class="photo-card" data-index="6" data-title="Detalles que Endulzan"
+        data-caption="Nuestros antojos compartidos, esas meriendas ricas donde el mejor ingrediente siempre es tu hermosa compañía.">
+        <div class="photo-media-wrapper">
+          <img src="img/foto7.jpg" alt="Delicioso postre con fresas y chocolate compartido" class="photo-img"
+            loading="lazy">
+          <div class="photo-overlay">
+            <button class="zoom-btn" title="Ver foto en tamaño completo" aria-label="Ampliar foto">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+          <span class="photo-tag tag-blue">#MomentosDulces 🍓🍨</span>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-title-row">
+            <h2 class="photo-name">Detalles que Endulzan</h2>
+            <button class="like-btn" title="Dar amor a esta foto" aria-label="Reaccionar con corazón">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="like-icon">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+              <span class="like-counter">1</span>
+            </button>
+          </div>
+          <p class="photo-desc">
+            Nuestros antojos compartidos, donde el mejor sabor siempre es disfrutar a tu lado.
+          </p>
+        </div>
+      </article>
+
+      <!-- Foto 8: Rostros juntos y miradas dulces -->
+      <article class="photo-card" data-index="7" data-title="Cerca de Ti"
+        data-caption="Apoyar mi cabeza junto a la tuya, mirarnos y sentir esa calma y felicidad infinita que solo vos me das.">
+        <div class="photo-media-wrapper">
+          <img src="img/foto8.jpg" alt="Rostros juntos mirándose con ternura y cariño" class="photo-img" loading="lazy">
+          <div class="photo-overlay">
+            <button class="zoom-btn" title="Ver foto en tamaño completo" aria-label="Ampliar foto">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+          <span class="photo-tag tag-rose">#MiradasQueHablan 💙✨</span>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-title-row">
+            <h2 class="photo-name">Cerca de Ti</h2>
+            <button class="like-btn" title="Dar amor a esta foto" aria-label="Reaccionar con corazón">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="like-icon">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+              <span class="like-counter">1</span>
+            </button>
+          </div>
+          <p class="photo-desc">
+            Apoyar mi cabeza junto a la tuya y sentir esa paz inmensa que solo vos me das.
+          </p>
+        </div>
+      </article>
+
+    </main>
+
+    <!-- Botones de Acción de la Galería -->
+    <div class="gallery-actions">
+      <a href="index.html" class="action-btn btn-counter">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        Ver el Contador de Tiempo Juntos 💖
+      </a>
+
+      <button class="action-btn btn-share btn-hug-trigger" id="share-gallery-btn"
+        title="¡Apretá continuamente para llenar el fondo de corazones!">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round" class="hug-icon-animated">
+          <path
+            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+          </path>
+        </svg>
+        <span class="hug-btn-text">Enviar un Abrazo Virtual 💜</span>
+      </button>
+    </div>
+
+    <!-- Pie de página -->
+    <footer class="gallery-footer">
+      Coleccionando instantes eternos • <span>Siempre juntos</span> 💜💙
+    </footer>
+
+  </div>
+
+  <!-- Lightbox Modal para Ver Fotos en Pantalla Completa -->
+  <div class="lightbox-modal" id="lightbox-modal" aria-hidden="true" role="dialog" aria-label="Visualizador de fotos">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+
+    <div class="lightbox-container">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Cerrar visor">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Foto anterior">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Foto siguiente">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="lightbox-content">
+        <div class="lightbox-image-box">
+          <img src="" alt="" id="lightbox-img" class="lightbox-img">
+        </div>
+
+        <div class="lightbox-caption">
+          <div class="lightbox-header-row">
+            <h3 id="lightbox-title" class="lightbox-title"></h3>
+            <span id="lightbox-counter" class="lightbox-counter"></span>
+          </div>
+          <p id="lightbox-desc" class="lightbox-desc"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificación -->
+  <div class="toast" id="gallery-toast" role="status" aria-live="polite">
+    <span class="toast-heart">💜</span>
+    <span class="toast-text" id="toast-text">¡Mensaje de amor enviado!</span>
+  </div>
+
+  <!-- Script de la Galería -->
+  <script src="galeria.js"></script>
+</body>
+
+</html>
