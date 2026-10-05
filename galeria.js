@@ -1,375 +1,248 @@
 // ===================================================
-// JAVASCRIPT DE LA GALERÍA DE AMOR (VIOLETA & AZUL)
+// CONTADOR DE TIEMPO TRANSCURRIDO CON AMOR
+// Fecha objetivo: 6 de mayo de 2025 a las 20:00:00 (hora local)
+// Nota: En JavaScript los meses van de 0 a 11, por lo que Mayo es el mes 4.
 // ===================================================
+const TARGET_DATE = new Date(2025, 4, 6, 20, 0, 0);
 
-// Datos de las 8 fotos de amor
-const PHOTOS_DATA = [
-  {
-    src: 'img/foto1.jpg',
-    title: 'Reflejo de Nosotros',
-    caption: 'Un momento espontáneo frente al espejo, miradas cómplices y la certeza de que a tu lado todo es más divertido y lindo. 💜',
-    tag: '#Complicidad'
-  },
-  {
-    src: 'img/foto2.jpg',
-    title: 'Miradas que Enamoran',
-    caption: 'En blanco y negro o en mil colores, no hay lugar más lindo en el mundo que estar así de cerca tuyo. 💙',
-    tag: '#AmorPuro'
-  },
-  {
-    src: 'img/foto3.jpg',
-    title: 'Tardes Dulces',
-    caption: 'Nuestras salidas por algo rico: compartiendo risas, antojos y esos momentos que dejan el mejor sabor en el corazón. 🥤🍫',
-    tag: '#NuestrasCitas'
-  },
-  {
-    src: 'img/foto4.jpg',
-    title: 'Nuestra Chispa',
-    caption: 'Tu compañía y tu forma de ser hacen que cualquier día común se transforme en un día hermoso y feliz. 💜✨',
-    tag: '#SiempreJuntos'
-  },
-  {
-    src: 'img/foto5.jpg',
-    title: 'Paz a tu Lado',
-    caption: 'El refugio más cálido, suave y seguro de todos: descansar en tus brazos y sentir que el mundo entero se detiene. 🌙💙',
-    tag: '#MiLugarSeguro'
-  },
-  {
-    src: 'img/foto6.jpg',
-    title: 'Un Beso Nuestro',
-    caption: 'Ese beso tierno donde el tiempo se detiene, nuestras miradas se encuentran y nada más importa en el mundo. 💍💜',
-    tag: '#BesoEterno'
-  },
-  {
-    src: 'img/foto7.jpg',
-    title: 'Detalles que Endulzan',
-    caption: 'Nuestros antojos compartidos, esas meriendas ricas donde el mejor ingrediente siempre es tu hermosa compañía. 🍓🍨',
-    tag: '#MomentosDulces'
-  },
-  {
-    src: 'img/foto8.jpg',
-    title: 'Cerca de Ti',
-    caption: 'Apoyar mi cabeza junto a la tuya, mirarnos y sentir esa calma y felicidad infinita que solo vos me das. 💙✨',
-    tag: '#MiradasQueHablan'
-  }
-];
+// Elementos del DOM del Contador
+const daysEl = document.getElementById('days');
+const hoursEl = document.getElementById('hours');
+const minutesEl = document.getElementById('minutes');
+const secondsEl = document.getElementById('seconds');
+const secondsBarEl = document.getElementById('seconds-bar');
 
-// Elementos del DOM del Lightbox
-const lightboxModal = document.getElementById('lightbox-modal');
-const lightboxBackdrop = document.getElementById('lightbox-backdrop');
-const lightboxClose = document.getElementById('lightbox-close');
-const lightboxPrev = document.getElementById('lightbox-prev');
-const lightboxNext = document.getElementById('lightbox-next');
-const lightboxImg = document.getElementById('lightbox-img');
-const lightboxTitle = document.getElementById('lightbox-title');
-const lightboxCounter = document.getElementById('lightbox-counter');
-const lightboxDesc = document.getElementById('lightbox-desc');
+const totalWeeksEl = document.getElementById('total-weeks');
+const totalHoursEl = document.getElementById('total-hours');
+const totalMinutesEl = document.getElementById('total-minutes');
+const totalSecondsEl = document.getElementById('total-seconds');
 
-// Toast y botones
-const toastEl = document.getElementById('gallery-toast');
-const toastTextEl = document.getElementById('toast-text');
-const shareBtn = document.getElementById('share-gallery-btn');
+const statusBadgeEl = document.getElementById('status-badge');
+const statusTextEl = document.getElementById('status-text');
+const copyBtn = document.getElementById('copy-btn');
+const toastEl = document.getElementById('toast');
+const currentClockEl = document.getElementById('current-clock');
 
-let currentPhotoIndex = 0;
+// Formateador con separadores de miles para números grandes
+const numberFormatter = new Intl.NumberFormat('es-ES');
 
-// ===================================================
-// FUNCIONALIDAD DEL LIGHTBOX
-// ===================================================
+// Variables para detectar cambios y animar números
+let prevValues = {
+  days: null,
+  hours: null,
+  minutes: null,
+  seconds: null
+};
 
-function openLightbox(index) {
-  currentPhotoIndex = (index + PHOTOS_DATA.length) % PHOTOS_DATA.length;
-  updateLightboxContent();
-  lightboxModal.classList.add('active');
-  lightboxModal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+function padZero(num) {
+  return String(num).padStart(2, '0');
 }
 
-function closeLightbox() {
-  lightboxModal.classList.remove('active');
-  lightboxModal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
+function updateCounter() {
+  const now = new Date();
+  const diffMs = now - TARGET_DATE;
 
-function updateLightboxContent() {
-  const photo = PHOTOS_DATA[currentPhotoIndex];
-  if (!photo) return;
-
-  lightboxImg.src = photo.src;
-  lightboxImg.alt = photo.title;
-  lightboxTitle.textContent = photo.title;
-  lightboxCounter.textContent = `Foto ${currentPhotoIndex + 1} de ${PHOTOS_DATA.length}`;
-  lightboxDesc.textContent = photo.caption;
-}
-
-function nextPhoto() {
-  currentPhotoIndex = (currentPhotoIndex + 1) % PHOTOS_DATA.length;
-  updateLightboxContent();
-}
-
-function prevPhoto() {
-  currentPhotoIndex = (currentPhotoIndex - 1 + PHOTOS_DATA.length) % PHOTOS_DATA.length;
-  updateLightboxContent();
-}
-
-// Configurar clics en cada tarjeta de foto
-document.querySelectorAll('.photo-card').forEach((card) => {
-  const index = parseInt(card.getAttribute('data-index'), 10);
-  const mediaWrapper = card.querySelector('.photo-media-wrapper');
-
-  if (mediaWrapper) {
-    mediaWrapper.addEventListener('click', () => {
-      openLightbox(index);
+  // Actualizar reloj de hora actual en vivo
+  if (currentClockEl) {
+    currentClockEl.textContent = now.toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
     });
   }
-});
 
-// Event Listeners del Lightbox
-if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
-if (lightboxNext) lightboxNext.addEventListener('click', nextPhoto);
-if (lightboxPrev) lightboxPrev.addEventListener('click', prevPhoto);
+  if (diffMs >= 0) {
+    // La fecha ya pasó: calcular tiempo transcurrido
+    if (statusTextEl && statusTextEl.textContent !== 'Tiempo en curso') {
+      statusTextEl.textContent = 'Tiempo en curso';
+    }
 
-// Navegación por teclado (Flechas y Escape)
-window.addEventListener('keydown', (e) => {
-  if (!lightboxModal || !lightboxModal.classList.contains('active')) return;
+    const totalSeconds = Math.floor(diffMs / 1000);
+    const seconds = totalSeconds % 60;
 
-  if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowRight') nextPhoto();
-  if (e.key === 'ArrowLeft') prevPhoto();
-});
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const minutes = totalMinutes % 60;
 
-// ===================================================
-// SISTEMA DE REACCIONES (LIKES CON PERSISTENCIA LOCALSTORAGE)
-// Guarda el contador y el estado de like para cada foto
-// para que se mantengan la próxima vez que el usuario entre.
-// ===================================================
+    const totalHours = Math.floor(totalMinutes / 60);
+    const hours = totalHours % 24;
 
-const STORAGE_KEY_LIKES = 'galeria_fotos_likes_v1';
+    const days = Math.floor(totalHours / 24);
+    const weeks = Math.floor(days / 7);
 
-// Obtener los datos guardados en localStorage de manera segura
-function getStoredLikes() {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY_LIKES);
-    return data ? JSON.parse(data) : {};
-  } catch (err) {
-    console.warn('No se pudo acceder a localStorage para leer los likes:', err);
-    return {};
+    // Actualizar valores en pantalla con animación suave al cambiar
+    setCounterValue(daysEl, numberFormatter.format(days), 'days', days);
+    setCounterValue(hoursEl, padZero(hours), 'hours', hours);
+    setCounterValue(minutesEl, padZero(minutes), 'minutes', minutes);
+    setCounterValue(secondsEl, padZero(seconds), 'seconds', seconds);
+
+    // Barra de progreso del minuto actual (0 a 100%)
+    if (secondsBarEl) {
+      const progressPercent = ((seconds + 1) / 60) * 100;
+      secondsBarEl.style.width = `${progressPercent}%`;
+    }
+
+    // Totales acumulados
+    if (totalWeeksEl) totalWeeksEl.textContent = numberFormatter.format(weeks);
+    if (totalHoursEl) totalHoursEl.textContent = numberFormatter.format(totalHours);
+    if (totalMinutesEl) totalMinutesEl.textContent = numberFormatter.format(totalMinutes);
+    if (totalSecondsEl) totalSecondsEl.textContent = numberFormatter.format(totalSeconds);
+
+  } else {
+    // En caso de que la fecha objetivo esté en el futuro respecto al reloj local
+    const absDiffMs = Math.abs(diffMs);
+    const totalSeconds = Math.floor(absDiffMs / 1000);
+    const seconds = totalSeconds % 60;
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const minutes = totalMinutes % 60;
+    const totalHours = Math.floor(totalMinutes / 60);
+    const hours = totalHours % 24;
+    const days = Math.floor(totalHours / 24);
+
+    if (statusTextEl) {
+      statusTextEl.textContent = 'Inicia el 6 de Mayo de 2025';
+    }
+
+    setCounterValue(daysEl, numberFormatter.format(days), 'days', days);
+    setCounterValue(hoursEl, padZero(hours), 'hours', hours);
+    setCounterValue(minutesEl, padZero(minutes), 'minutes', minutes);
+    setCounterValue(secondsEl, padZero(seconds), 'seconds', seconds);
+
+    if (totalWeeksEl) totalWeeksEl.textContent = numberFormatter.format(Math.floor(days / 7));
+    if (totalHoursEl) totalHoursEl.textContent = numberFormatter.format(totalHours);
+    if (totalMinutesEl) totalMinutesEl.textContent = numberFormatter.format(totalMinutes);
+    if (totalSecondsEl) totalSecondsEl.textContent = numberFormatter.format(totalSeconds);
   }
 }
 
-// Guardar los datos actualizados en localStorage
-function saveStoredLikes(likesData) {
-  try {
-    localStorage.setItem(STORAGE_KEY_LIKES, JSON.stringify(likesData));
-  } catch (err) {
-    console.warn('No se pudo guardar en localStorage:', err);
-  }
-}
-
-// Actualizar la interfaz de cada tarjeta con los datos guardados
-function syncLikesUI() {
-  const storedLikes = getStoredLikes();
-
-  document.querySelectorAll('.photo-card').forEach((card, index) => {
-    const photoKey = card.getAttribute('data-index') || String(index);
-    const btn = card.querySelector('.like-btn');
-    if (!btn) return;
-    const counter = btn.querySelector('.like-counter');
-
-    // Valor base del HTML si no hay registro aún
-    const baseCount = counter ? (parseInt(counter.textContent.trim(), 10) || 1) : 1;
-
-    if (storedLikes[photoKey]) {
-      const item = storedLikes[photoKey];
-      if (counter && typeof item.count === 'number') {
-        counter.textContent = item.count;
-      }
-      if (item.liked) {
-        btn.classList.add('liked');
-        btn.setAttribute('aria-pressed', 'true');
-      } else {
-        btn.classList.remove('liked');
-        btn.setAttribute('aria-pressed', 'false');
-      }
-    } else {
-      // Registrar valor inicial
-      storedLikes[photoKey] = {
-        count: baseCount,
-        liked: false
-      };
-      btn.setAttribute('aria-pressed', 'false');
-    }
-  });
-
-  saveStoredLikes(storedLikes);
-}
-
-// Configurar los eventos de clic en los botones de like
-function setupLikesListeners() {
-  document.querySelectorAll('.like-btn').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // Evitar abrir el lightbox
-
-      const card = btn.closest('.photo-card');
-      const photoKey = card ? (card.getAttribute('data-index') || '0') : '0';
-      const counter = btn.querySelector('.like-counter');
-
-      const storedLikes = getStoredLikes();
-      const currentItem = storedLikes[photoKey] || {
-        count: counter ? (parseInt(counter.textContent.trim(), 10) || 1) : 1,
-        liked: btn.classList.contains('liked')
-      };
-
-      const willLike = !currentItem.liked;
-
-      if (willLike) {
-        currentItem.liked = true;
-        currentItem.count = (typeof currentItem.count === 'number' ? currentItem.count : 1) + 1;
-        btn.classList.add('liked');
-        btn.setAttribute('aria-pressed', 'true');
-
-        showToast('¡Le enviaste amor a este recuerdo! 💖');
-
-        // Si se dio like, agregar algunos corazoncitos al fondo
-        if (typeof createHeart === 'function' && Array.isArray(hearts)) {
-          for (let i = 0; i < 5; i++) {
-            if (hearts.length < 180) hearts.push(createHeart(true));
-          }
-        }
-      } else {
-        currentItem.liked = false;
-        // Reducir like manteniendo mínimo 1 (el like base inicial)
-        currentItem.count = Math.max(1, (typeof currentItem.count === 'number' ? currentItem.count : 2) - 1);
-        btn.classList.remove('liked');
-        btn.setAttribute('aria-pressed', 'false');
-
-        showToast('Reacción actualizada 🤍');
-      }
-
-      // Micro-animación en el contador numérico
-      if (counter) {
-        counter.textContent = currentItem.count;
-        counter.style.display = 'inline-block';
-        counter.style.transition = 'transform 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        counter.style.transform = 'scale(1.35)';
-        setTimeout(() => {
-          counter.style.transform = 'scale(1)';
-        }, 180);
-      }
-
-      // Guardar inmediatamente en localStorage
-      storedLikes[photoKey] = currentItem;
-      saveStoredLikes(storedLikes);
-    });
-  });
-
-  // Sincronizar en tiempo real si tiene varias pestañas abiertas
-  window.addEventListener('storage', (e) => {
-    if (e.key === STORAGE_KEY_LIKES) {
-      syncLikesUI();
-    }
-  });
-}
-
-// Inicializar datos al cargar la página
-syncLikesUI();
-setupLikesListeners();
-
-// ===================================================
-// MOTOR DE ABRAZOS VIRTUALES Y CORAZONES FLOTANTES
-// Al presionar continuamente el botón, se multiplican los
-// corazones en el fondo y se aceleran cada vez más rápido.
-// ===================================================
-
-const canvas = document.getElementById('gallery-hearts-canvas');
-let ctx = null;
-let animationFrameId = null;
-
-// Paleta violeta y azul con toques de rosa amoroso
-const GALLERY_HEART_COLORS = [
-  '#8b5cf6', // Violeta
-  '#a855f7', // Púrpura
-  '#3b82f6', // Azul real
-  '#60a5fa', // Azul cielo
-  '#38bdf8', // Celeste brillante
-  '#c084fc', // Lavanda
-  '#7c3aed', // Índigo violeta
-  '#ff4d6d', // Rosa amor
-  '#fda4af'  // Blush
-];
-
-let hearts = [];
-let baseHeartCount = 35;
-let globalSpeedMultiplier = 1.0;
-let width = window.innerWidth;
-let height = window.innerHeight;
-let lastHugClickTime = 0;
-
-// Función principal al pulsar "Enviar un Abrazo Virtual"
-function sendVirtualHug() {
-  lastHugClickTime = Date.now();
-
-  // 1. Aumentar la velocidad en 1.0 por cada pulsación continua
-  globalSpeedMultiplier = Math.min(15.0, globalSpeedMultiplier + 1.0);
-
-  // 2. Hacer aparecer muchos más corazones directamente en el fondo
-  const heartsToAdd = 18;
-  for (let i = 0; i < heartsToAdd; i++) {
-    if (hearts.length < 180) {
-      hearts.push(createHeart(true));
-    }
-  }
-
-  // 3. Notificación cariñosa (sin números ni velocidades)
-  showToast('¡Abrazo virtual enviado con todo mi amor! 💜✨');
-}
-
-// Cada 20 milisegundos: si pasaron 2 segundos sin apretar el botón,
-// baja drásticamente la velocidad reduciendo 1.0 hasta llegar a 1.0
-setInterval(() => {
-  if (globalSpeedMultiplier > 1.0) {
-    const timeSinceLastClick = Date.now() - lastHugClickTime;
-    if (timeSinceLastClick >= 2000) {
-      globalSpeedMultiplier = Math.max(1.0, globalSpeedMultiplier - 1.0);
-    }
-  }
-}, 20);
-
-// Conectar el botón de abrazo virtual de abajo
-document.querySelectorAll('.btn-hug-trigger').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    sendVirtualHug();
-
-    // Pequeño rebote táctil en el botón
-    btn.style.transform = 'scale(0.94)';
+function setCounterValue(element, formattedText, key, rawValue) {
+  if (!element) return;
+  if (prevValues[key] !== rawValue) {
+    element.textContent = formattedText;
+    prevValues[key] = rawValue;
+    
+    // Micro-animación de escala al cambiar el número
+    element.style.transform = 'scale(1.08)';
     setTimeout(() => {
-      btn.style.transform = '';
-    }, 120);
-  });
-});
+      element.style.transform = 'scale(1)';
+    }, 150);
+  }
+}
+
+// Función para copiar el resumen de amor al portapapeles
+function copySummary() {
+  const now = new Date();
+  const diffMs = now - TARGET_DATE;
+
+  let textToCopy = '';
+
+  if (diffMs >= 0) {
+    const totalSeconds = Math.floor(diffMs / 1000);
+    const seconds = totalSeconds % 60;
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const minutes = totalMinutes % 60;
+    const totalHours = Math.floor(totalMinutes / 60);
+    const hours = totalHours % 24;
+    const days = Math.floor(totalHours / 24);
+
+    textToCopy = `💖 Han transcurrido ${numberFormatter.format(days)} días, ${hours} horas, ${minutes} minutos y ${seconds} segundos desde el 6 de mayo de 2025 a las 20:00 hs. ¡Cada segundo cuenta en esta hermosa historia! 💕`;
+  } else {
+    textToCopy = `💖 Contando los días para el 6 de mayo de 2025 a las 20:00 hs. 💕`;
+  }
+
+  // Generar pequeña lluvia de corazones festiva en el botón
+  if (copyBtn) {
+    const rect = copyBtn.getBoundingClientRect();
+    spawnHeartBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 12);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      showToast('¡Resumen de amor copiado con éxito! 💖');
+    }).catch(() => {
+      fallbackCopy(textToCopy);
+    });
+  } else {
+    fallbackCopy(textToCopy);
+  }
+}
+
+function fallbackCopy(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    showToast('¡Resumen de amor copiado con éxito! 💖');
+  } catch (err) {
+    showToast('No se pudo copiar automáticamente');
+  }
+  document.body.removeChild(textarea);
+}
 
 function showToast(message) {
   if (!toastEl) return;
-  if (toastTextEl) toastTextEl.textContent = message;
+  const msgEl = toastEl.querySelector('.toast-message');
+  if (msgEl) msgEl.textContent = message;
   toastEl.classList.add('show');
-
+  
   setTimeout(() => {
     toastEl.classList.remove('show');
-  }, 2500);
+  }, 3200);
 }
+
+// Event Listeners
+if (copyBtn) {
+  copyBtn.addEventListener('click', copySummary);
+}
+
+// Iniciar contador inmediatamente y actualizar cada segundo
+updateCounter();
+setInterval(updateCounter, 1000);
+
+
+// ===================================================
+// MOTOR DE CORAZONES FLOTANTES EN EL FONDO (CANVAS)
+// Los corazones están estrictamente en el fondo con
+// pointer-events: none y opacidades sutiles para NUNCA
+// tapar ninguna palabra, texto ni botón.
+// ===================================================
+
+const canvas = document.getElementById('hearts-canvas');
+let ctx = null;
+let animationFrameId = null;
+
+const HEART_COLORS = [
+  '#ff4d6d',
+  '#ff758f',
+  '#fb7185',
+  '#fda4af',
+  '#f43f5e',
+  '#e11d48',
+  '#be123c',
+  '#ffccd5'
+];
+
+let hearts = [];
+let burstHearts = [];
+let width = window.innerWidth;
+let height = window.innerHeight;
 
 function initCanvas() {
   if (!canvas) return;
   ctx = canvas.getContext('2d');
   resizeCanvas();
 
-  baseHeartCount = width < 600 ? 25 : 40;
+  // Crear corazones de fondo iniciales
+  const count = width < 600 ? 25 : 45;
   hearts = [];
-  for (let i = 0; i < baseHeartCount; i++) {
+  for (let i = 0; i < count; i++) {
     hearts.push(createHeart(true));
   }
 
+  // Iniciar ciclo de animación
   if (animationFrameId) cancelAnimationFrame(animationFrameId);
   animateHearts();
 }
@@ -391,43 +264,50 @@ function resizeCanvas() {
   }
 }
 
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', () => {
+  resizeCanvas();
+});
 
 function createHeart(randomY = false) {
   return {
     x: Math.random() * width,
     y: randomY ? Math.random() * height : height + 25 + Math.random() * 40,
-    size: Math.random() * 16 + 10,
-    speedY: Math.random() * 0.75 + 0.45,
-    wobbleSpeed: Math.random() * 0.025 + 0.015,
-    wobbleAmplitude: Math.random() * 1.6 + 0.6,
+    size: Math.random() * 16 + 10, // Tamaño entre 10px y 26px
+    speedY: Math.random() * 0.7 + 0.4, // Velocidad vertical suave
+    wobbleSpeed: Math.random() * 0.02 + 0.015,
+    wobbleAmplitude: Math.random() * 1.5 + 0.6,
     wobbleOffset: Math.random() * Math.PI * 2,
-    color: GALLERY_HEART_COLORS[Math.floor(Math.random() * GALLERY_HEART_COLORS.length)],
-    opacity: Math.random() * 0.28 + 0.16, // Transparente para nunca tapar nada
+    color: HEART_COLORS[Math.floor(Math.random() * HEART_COLORS.length)],
+    opacity: Math.random() * 0.28 + 0.15, // Opacidad translúcida para que no tape nada
     rotation: (Math.random() - 0.5) * 0.35,
-    pulseSpeed: Math.random() * 0.035 + 0.02,
+    pulseSpeed: Math.random() * 0.03 + 0.02,
     pulseOffset: Math.random() * Math.PI * 2
   };
 }
 
+// Dibuja la silueta de un corazón mediante curvas de Bézier
 function drawHeart(context, x, y, size, color, opacity, rotation = 0) {
   context.save();
   context.translate(x, y);
   context.rotate(rotation);
-
+  
+  // Normalizar tamaño respecto a la figura base
   const scale = size / 30;
   context.scale(scale, scale);
 
   context.beginPath();
+  // Comenzamos en la hendidura superior del corazón
   context.moveTo(0, -6);
+  // Lóbulo izquierdo hacia la punta inferior
   context.bezierCurveTo(-18, -24, -30, 4, 0, 26);
+  // Lóbulo derecho desde la punta inferior de regreso arriba
   context.bezierCurveTo(30, 4, 18, -24, 0, -6);
   context.closePath();
 
   context.fillStyle = color;
   context.globalAlpha = opacity;
   context.shadowColor = color;
-  context.shadowBlur = 8;
+  context.shadowBlur = 6;
   context.fill();
 
   context.restore();
@@ -441,39 +321,71 @@ function animateHearts() {
 
   ctx.clearRect(0, 0, width, height);
 
-  // Dibujar y mover cada corazón en el fondo
+  // 1. Dibujar corazones flotantes de fondo
   for (let i = 0; i < hearts.length; i++) {
     const h = hearts[i];
 
-    // Mover hacia arriba multiplicado por la velocidad acelerada
-    h.y -= h.speedY * globalSpeedMultiplier;
-
-    // Oscilación lateral
+    h.y -= h.speedY;
     const currentWobble = Math.sin(tick * h.wobbleSpeed + h.wobbleOffset) * h.wobbleAmplitude;
-    h.x += currentWobble * (1 + (globalSpeedMultiplier - 1) * 0.25);
+    h.x += currentWobble;
 
-    // Latido sutil
+    // Sutil efecto de latido en el tamaño
     const pulse = 1 + Math.sin(tick * h.pulseSpeed + h.pulseOffset) * 0.08;
     const currentSize = h.size * pulse;
 
     drawHeart(ctx, h.x, h.y, currentSize, h.color, h.opacity, h.rotation + currentWobble * 0.1);
 
-    // Cuando el corazón supera la parte superior de la pantalla
+    // Reiniciar si el corazón sale por la parte superior
     if (h.y < -40) {
-      // Si hay exceso de corazones y la velocidad ya bajó a 1.0 tras 2 segundos, reducirlos gradualmente
-      if (hearts.length > baseHeartCount && globalSpeedMultiplier <= 1.0 && (Date.now() - lastHugClickTime >= 2000) && Math.random() < 0.3) {
-        hearts.splice(i, 1);
-        i--;
-      } else {
-        hearts[i] = createHeart(false);
-      }
+      hearts[i] = createHeart(false);
+    }
+  }
+
+  // 2. Dibujar corazones interactivos de ráfaga (al hacer click)
+  for (let i = burstHearts.length - 1; i >= 0; i--) {
+    const b = burstHearts[i];
+    b.x += b.vx;
+    b.y += b.vy;
+    b.vy += 0.03; // Sutil gravedad
+    b.opacity -= 0.018; // Desvanecimiento rápido
+    b.size *= 0.98;
+
+    if (b.opacity <= 0 || b.size <= 2) {
+      burstHearts.splice(i, 1);
+    } else {
+      drawHeart(ctx, b.x, b.y, b.size, b.color, b.opacity, b.rotation);
     }
   }
 
   animationFrameId = requestAnimationFrame(animateHearts);
 }
 
-// Iniciar al cargar
+// Genera una pequeña ráfaga de corazoncitos brillantes al hacer click
+function spawnHeartBurst(x, y, count = 6) {
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+    const speed = Math.random() * 2.8 + 1.2;
+    burstHearts.push({
+      x: x,
+      y: y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 1.5,
+      size: Math.random() * 12 + 10,
+      color: HEART_COLORS[Math.floor(Math.random() * HEART_COLORS.length)],
+      opacity: 0.85,
+      rotation: (Math.random() - 0.5) * 0.6
+    });
+  }
+}
+
+// Efecto interactivo: hacer clic en cualquier lugar genera sutiles corazoncitos
+window.addEventListener('pointerdown', (e) => {
+  // Solo si no fue sobre el botón de copiar (que ya tiene su propia ráfaga)
+  if (e.target.closest('#copy-btn')) return;
+  spawnHeartBurst(e.clientX, e.clientY, 4);
+});
+
+// Inicializar el canvas al cargar la página
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCanvas);
 } else {
