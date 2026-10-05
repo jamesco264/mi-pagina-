@@ -1,6 +1,5 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Temas rotativos para garantizar variedad
 const ENFOQUES_ROMANTICOS = [
   "el brillo inconfundible de sus ojos y la paz inmensa que transmite su mirada",
   "el recuerdo dulce de cómo empezó todo cuando se conocieron en el colegio y todo lo hermoso que construyeron",
@@ -15,18 +14,15 @@ const ENFOQUES_ROMANTICOS = [
 ];
 
 export default async function handler(req, res) {
-  // Manejo de métodos permitidos
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    console.error('Error: Variable GEMINI_API_KEY no encontrada');
-    return res.status(500).json({ error: 'Falta configurar la API Key en Vercel' });
+    return res.status(500).json({ error: 'Falta configurar GEMINI_API_KEY en Vercel' });
   }
 
-  // Parse seguro del cuerpo recibido
   let bodyData = req.body;
   if (typeof bodyData === 'string') {
     try {
@@ -51,34 +47,19 @@ Reglas estrictas:
   }
 
   try {
-    const ai = new GoogleGenAI({ apiKey });
-    let response;
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      generationConfig: {
+        temperature: 0.95
+      }
+    });
 
-    try {
-      response = await ai.models.generateContent({
-        model: 'gemini-2.5-pro',
-        contents: prompt,
-        config: {
-          temperature: 0.95,
-          topP: 0.95,
-          systemInstruction: "Sos un escritor y poeta de alta sensibilidad literaria. Escribís dedicatorias de amor para Ayli de parte de Tyron. Tu prosa es emotiva, bella, auténtica, llena de calidez y libre de frases hechas o lugares comunes."
-        }
-      });
-    } catch (proError) {
-      console.warn('Fallback a gemini-2.5-flash:', proError.message);
-      response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-        config: {
-          temperature: 0.95,
-          systemInstruction: "Escribí una dedicatoria de amor dulce, poética y única para Ayli de parte de su novio Tyron en español rioplatense."
-        }
-      });
-    }
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const mensajeFinal = response.text() ? response.text().trim() : '';
 
-    const mensajeFinal = response.text ? response.text.trim() : '';
     return res.status(200).json({ mensaje: mensajeFinal });
-
   } catch (error) {
     console.error('Error con Gemini API:', error);
     return res.status(500).json({ error: error.message || 'No se pudo generar el mensaje' });
